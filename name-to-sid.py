@@ -36,26 +36,22 @@ def byteToLong(byte, little_endian=True):
             a = string.rjust(byte, 8, '\x00')
             return struct.unpack('>q', a)[0] 
 
-def readCifsCredentials():
-    with open("/etc/cifs-credentials") as f:
+def readLdapCredentials():
+    with open("/etc/secrets") as f:
         for line in f:          
-            if line.startswith('password='):
+            if line.startswith('LDAP_PASSWORD='):
                 password = line[line.index('=') + 1:]
-            if line.startswith('username='):
-                username = line[line.index('=') + 1:]
-    
-    return (password.strip(), username.strip())
+
+    return (password.strip())
 
 if len(sys.argv) == 1:
     sys.stderr.write("name-to-sid.py: Supply user as first argument \n")
     sys.exit(1)
 
-password, username = readCifsCredentials()
-
 l = ldap.initialize('ldap://ldap.maastrichtuniversity.nl')
 
 l.protocol_version = ldap.VERSION3
-l.simple_bind_s("CN=%s (M4I),OU=M4I-Nanoscopy-Resource,OU=Users,OU=M4I,OU=FHML,DC=unimaas,DC=nl" % username, password)
+l.simple_bind_s("CN=Irods (HML),OU=Hml-resources,OU=Users,OU=HML,OU=FHML,DC=unimaas,DC=nl", readLdapCredentials())
 
 baseDN             = 'DC=unimaas,DC=nl'
 searchScope        = ldap.SCOPE_SUBTREE
