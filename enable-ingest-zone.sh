@@ -2,9 +2,12 @@
 
 set -e
 
+# Strip domain name of the username
+user=$(echo $1 | cut -f1 -d"@")
+
 # Enables an ingest zone for a certain user by setting the cifs acl. First obtain the sid
 
-sid=$($(dirname "$0")/name-to-sid.py $1)
+sid=$($(dirname "$0")/name-to-sid.py $user)
 
 if [ -z "$sid" ]; then
 	exit 1
