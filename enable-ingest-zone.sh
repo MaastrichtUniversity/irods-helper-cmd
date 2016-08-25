@@ -4,20 +4,14 @@ set -e
 
 # Strip domain name of the username
 user=$(echo $1 | cut -f1 -d"@")
+# Get the token from the full path to the ingest zone
 
-# Enables an ingest zone for a certain user by setting the cifs acl. First obtain the sid
+token=$(basename $2)
 
-sid=$($(dirname "$0")/name-to-sid.py $user)
-
-if [ -z "$sid" ]; then
-	exit 1
-fi
-
+# Creates the token directory
 mkdir $2
 
-# Set all rights except special permissions and full control, also let them inherit
-# Versions of setcifsacl that I tested would always return a non zero return code, even on success
-set +e
-/usr/bin/setcifsacl -a "ACL:${sid}:ALLOWED/OI|CI/CHANGE" $2
+# Call MirthConnect to set CIFS rights on token directory
+curl "http://fhml-srv024.unimaas.nl:6668/?token=${token}&user=${user}"
 
 exit 0
