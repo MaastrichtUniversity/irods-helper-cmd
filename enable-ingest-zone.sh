@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+source /etc/secrets
 
 set -e
 
@@ -12,6 +13,6 @@ token=$(basename $2)
 mkdir $2
 
 # Call MirthConnect to set CIFS rights on token directory
-curl "http://fhml-srv024.unimaas.nl:6668/?token=${token}&user=${user}"
+timeout 5 curl --user $INGEST_USER:$INGEST_PASSWORD_MIRTHACL "http://fhml-srv024.unimaas.nl:6668/?token=${token}&user=${user}"
 
-exit 0
+exit $?
