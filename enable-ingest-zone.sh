@@ -13,6 +13,6 @@ token=$(basename $2)
 mkdir $2
 
 # Call MirthConnect to set CIFS rights on token directory
-timeout 5 curl --user $INGEST_USER:$INGEST_PASSWORD_MIRTHACL "http://fhml-srv024.unimaas.nl:6668/?token=${token}&user=${user}"
+curl --max-time 5 --fail --user $INGEST_MIRTHACL_USER:$INGEST_MIRTHACL_PASSWORD "http://${INGEST_MIRTHACL_URL}/?token=${token}&user=${user}"
 
 exit $?
