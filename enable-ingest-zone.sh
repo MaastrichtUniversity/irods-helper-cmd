@@ -9,8 +9,9 @@ user=$(echo $1 | cut -f1 -d"@")
 
 token=$(basename $2)
 
-# Creates the token directory
+# Creates the token directory + empty metadata.xml file
 mkdir $2
+touch $2/metadata.xml
 
 # Call MirthConnect to set CIFS rights on token directory
 curl --max-time 5 --fail --user $INGEST_MIRTHACL_USER:$INGEST_MIRTHACL_PASSWORD "http://${INGEST_MIRTHACL_URL}/?token=${token}&user=${user}"
