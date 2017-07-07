@@ -34,30 +34,46 @@ def byteToLong(byte, little_endian=True):
             return struct.unpack('<q', a)[0]
         else:
             a = string.rjust(byte, 8, '\x00')
-            return struct.unpack('>q', a)[0] 
+            return struct.unpack('>q', a)[0]
 
 def readLdapCredentials():
     with open("/etc/secrets") as f:
-        for line in f:          
+        for line in f:
             if line.startswith('LDAP_PASSWORD='):
                 password = line[line.index('=') + 1:]
 
     return (password.strip())
 
 if len(sys.argv) == 1:
-    sys.stderr.write("name-to-sid.py: Supply user as first argument \n")
+    sys.stderr.write("name-to-sid.py: ERROR: Supply user as first argument \n")
     sys.exit(1)
 
-l = ldap.initialize('ldap://ldap.maastrichtuniversity.nl')
+# Make distinction between UM- and AZM-LDAP server
+if sys.argv[2] == "UM":
+    l = ldap.initialize('ldap://ldap.maastrichtuniversity.nl')
 
-l.protocol_version = ldap.VERSION3
-l.simple_bind_s("CN=Irods (HML),OU=Hml-resources,OU=Users,OU=HML,OU=FHML,DC=unimaas,DC=nl", readLdapCredentials())
+    l.protocol_version = ldap.VERSION3
+    l.simple_bind_s("CN=Rit-dev (FACBURFHML),OU=Resources,OU=Users,OU=FACBURFHML,OU=FHML,DC=unimaas,DC=nl", readLdapCredentials())
 
-baseDN             = 'DC=unimaas,DC=nl'
-searchScope        = ldap.SCOPE_SUBTREE
-retrieveAttributes = ['objectSid']
-searchFilter       = "sAMAccountName=%s" % sys.argv[1]
+    baseDN             = 'DC=unimaas,DC=nl'
+    searchScope        = ldap.SCOPE_SUBTREE
+    retrieveAttributes = ['objectSid']
+    searchFilter       = "sAMAccountName=%s" % sys.argv[1]
+elif sys.argv[2] == "AZM":
+    l = ldap.initialize('ldap://a.corp')
 
+    l.protocol_version = ldap.VERSION3
+    l.simple_bind_s("CN=SASritmumcacc,OU=Power Users,OU=Accounts,DC=A,DC=CORP", readLdapCredentials())
+
+    baseDN             = 'DC=a,DC=corp'
+    searchScope        = ldap.SCOPE_SUBTREE
+    retrieveAttributes = ['objectSid']
+    searchFilter       = "mailNickName=%s" % sys.argv[1]
+else:
+    sys.stderr.write("name-to-sid.py: ERROR: Organisation was not correctly defined in second argument. Use one of \"UM\" or \"AZM\" \n")
+    sys.exit(1)
+
+# Perform the LDAP search
 id = l.search(baseDN, searchScope, searchFilter, retrieveAttributes)
 
 result_type, result = l.result(id, 0)

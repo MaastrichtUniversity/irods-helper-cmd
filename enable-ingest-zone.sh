@@ -5,15 +5,33 @@ set -e
 
 # Strip domain name of the username
 user=$(echo $1 | cut -f1 -d"@")
-# Get the token from the full path to the ingest zone
+domain=$(echo $1 | cut -f2 -d"@")
 
-token=$(basename $2)
+# Determine the organisation from the domain from e-mail
+if [ $domain="maastrichtuniversity.nl" ]; then
+    org="UM"
+elif [ $domain="mumc.nl" ]; then
+    org="AZM"
+else
+    echo "ERROR: Organisation could not be determined"
+    exit 1
+fi
+
+# First obtain the sid
+sid=$($(dirname "$0")/name-to-sid.py $user $org)
+
+if [ -z "$sid" ]; then
+	exit 1
+fi
 
 # Creates the token directory + empty metadata.xml file
 mkdir $2
 touch $2/metadata.xml
 
-# Call MirthConnect to set CIFS rights on token directory
-curl --max-time 5 --fail --user $INGEST_MIRTHACL_USER:$INGEST_MIRTHACL_PASSWORD "http://${INGEST_MIRTHACL_URL}/?token=${token}&user=${user}"
+# Set all rights except special permissions and full control, also let them inherit
+# Versions of setcifsacl that I tested would always return a non zero return code, even on success
+set +e
+/usr/bin/setcifsacl -a "ACL:${sid}:ALLOWED/OI|CI/CHANGE" $2
+/usr/bin/setcifsacl -a "ACL:${sid}:ALLOWED/OI/READ" $2/metadata.xml
 
-exit $?
+exit 0
