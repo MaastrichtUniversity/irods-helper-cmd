@@ -8,12 +8,12 @@ user=$(echo $1 | cut -f1 -d"@")
 domain=$(echo $1 | cut -f2 -d"@")
 
 # Determine the organisation from the domain from e-mail
-if [ $domain="maastrichtuniversity.nl" ]; then
+if [ $domain == "maastrichtuniversity.nl" ]; then
     org="UM"
-elif [ $domain="mumc.nl" ]; then
+elif [ $domain == "mumc.nl" ]; then
     org="AZM"
 else
-    echo "ERROR: Organisation could not be determined"
+    echo "ERROR: Unknown organisation"
     exit 1
 fi
 
