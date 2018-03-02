@@ -29,8 +29,6 @@ mkdir $2
 touch $2/metadata.xml
 
 # Set all rights except special permissions and full control, also let them inherit
-# Versions of setcifsacl that I tested would always return a non zero return code, even on success
-set +e
 /usr/bin/setcifsacl -a "ACL:${sid}:ALLOWED/OI|CI/CHANGE" $2
 /usr/bin/setcifsacl -a "ACL:${sid}:ALLOWED/OI/READ" $2/metadata.xml
 
