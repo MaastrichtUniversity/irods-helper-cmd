@@ -37,7 +37,7 @@ def byteToLong(byte, little_endian=True):
             return struct.unpack('>q', a)[0]
 
 def readLdapCredentials():
-    with open("/etc/secrets") as f:
+    with open("/etc/secrets/secrets") as f:
         for line in f:
             if line.startswith('LDAP_PASSWORD='):
                 password = line[line.index('=') + 1:]

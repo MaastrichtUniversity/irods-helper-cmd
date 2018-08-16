@@ -1,5 +1,5 @@
 #!/bin/bash
-source /etc/secrets
+source /etc/secrets/secrets
 
 set -e
 
