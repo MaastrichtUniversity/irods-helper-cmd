@@ -1,8 +1,8 @@
 #!/bin/bash
+source /etc/secrets
+set -e
+
 if [ "${USE_SAMBA}" = "true" ] ; then
-    source /etc/secrets
-    set -e
-    
     # Strip domain name of the username
     user=$(echo $1 | cut -f1 -d"@")
     domain=$(echo $1 | cut -f2 -d"@")
@@ -21,7 +21,7 @@ if [ "${USE_SAMBA}" = "true" ] ; then
     sid=$($(dirname "$0")/name-to-sid.py $user $org)
     
     if [ -z "$sid" ]; then
-    	exit 1
+        exit 1
     fi
     
     # Creates the token directory + empty metadata.xml file
@@ -34,7 +34,7 @@ if [ "${USE_SAMBA}" = "true" ] ; then
     
     exit 0
 else
-     # Creates the token directory + empty metadata.xml file
+    # Creates the token directory + empty metadata.xml file
     mkdir $2
     touch $2/metadata.xml
     exit 0
