@@ -1,6 +1,7 @@
 #!/bin/bash
-source /etc/secrets
 set -e
+
+source /etc/secrets
 
 if [ "${USE_SAMBA}" = "true" ] ; then
     # Strip domain name of the username
