@@ -4,14 +4,17 @@ set -e
 source /etc/secrets
 
 if [ "${USE_SAMBA}" = "true" ] ; then
+    userEmail=$1
     # Strip domain name of the username
     user=$(echo $1 | cut -f1 -d"@")
     domain=$(echo $1 | cut -f2 -d"@")
     
     # Determine the organisation from the domain from e-mail
     if [ $domain == "maastrichtuniversity.nl" ] || [ $domain == "scannexus.nl" ]; then
+        username=$userEmail
         org="UM"
     elif [ $domain == "mumc.nl" ]; then
+        username=$user
         org="AZM"
     else
         echo "ERROR: Unknown organisation"
@@ -19,7 +22,7 @@ if [ "${USE_SAMBA}" = "true" ] ; then
     fi
     
     # First obtain the sid
-    sid=$($(dirname "$0")/name-to-sid.py $user $org)
+    sid=$($(dirname "$0")/name-to-sid.py $username $org)
     
     if [ -z "$sid" ]; then
         exit 1
