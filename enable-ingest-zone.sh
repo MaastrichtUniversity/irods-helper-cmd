@@ -10,7 +10,7 @@ if [ "${USE_SAMBA}" = "true" ] ; then
     domain=$(echo $1 | cut -f2 -d"@")
     
     # Determine the organisation from the domain from e-mail
-    if [ $domain == "maastrichtuniversity.nl" ] || [ $domain == "student.maastrichtuniversity.nl" ] || [ $domain == "scannexus.nl" ]; then
+    if [ $domain == "maastrichtuniversity.nl" ] || [ $domain == "student.maastrichtuniversity.nl" ] || [ $domain == "scannexus.nl" || [ $domain == "unimaas.nl" ]; then
         username=$userEmail
         org="UM"
     elif [ $domain == "mumc.nl" ]; then
