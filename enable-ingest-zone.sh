@@ -10,7 +10,7 @@ if [ "${USE_SAMBA}" = "true" ] ; then
     domain=$(echo $1 | cut -f2 -d"@")
     
     # Determine the organisation from the domain from e-mail
-    if [ $domain == "maastrichtuniversity.nl" ] || [ $domain == "student.maastrichtuniversity.nl" ] || [ $domain == "scannexus.nl" || [ $domain == "unimaas.nl" ]; then
+    if [ $domain == "maastrichtuniversity.nl" ] || [ $domain == "student.maastrichtuniversity.nl" ] || [ $domain == "scannexus.nl"] || [ $domain == "unimaas.nl" ]; then
         username=$userEmail
         org="UM"
     elif [ $domain == "mumc.nl" ]; then
@@ -22,7 +22,7 @@ if [ "${USE_SAMBA}" = "true" ] ; then
     fi
     
     # First obtain the sid
-    sid=$($(dirname "$0")/name-to-sid.py $username $org)
+    sid=$($(dirname "$0")/name-to-sid.py $user $org)
     
     if [ -z "$sid" ]; then
         exit 1

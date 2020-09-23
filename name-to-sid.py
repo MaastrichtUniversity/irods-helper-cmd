@@ -58,7 +58,7 @@ if sys.argv[2] == "UM":
     baseDN             = 'DC=unimaas,DC=nl'
     searchScope        = ldap.SCOPE_SUBTREE
     retrieveAttributes = ['objectSid']
-    searchFilter       = "mail=%s" % sys.argv[1]
+    searchFilter       = "sAMAccountName=%s" % sys.argv[1]
 elif sys.argv[2] == "AZM":
     l = ldap.initialize('ldap://a.corp')
 
