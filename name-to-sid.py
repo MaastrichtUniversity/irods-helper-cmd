@@ -44,12 +44,18 @@ def readLdapCredentials():
 
     return (password.strip())
 
-if len(sys.argv) == 1:
+if len(sys.argv) == 0:
     sys.stderr.write("name-to-sid.py: ERROR: Supply user as first argument \n")
     sys.exit(1)
 
+userEmail = sys.argv[1]
+userSplit = userEmail.split('@')
+userName = userSplit[0]
+domain = userSplit[1]
+
+
 # Make distinction between UM- and AZM-LDAP server
-if sys.argv[2] == "UM":
+if domain == "unimaas.nl":
     l = ldap.initialize('ldap://ldap.maastrichtuniversity.nl')
 
     l.protocol_version = ldap.VERSION3
@@ -58,8 +64,9 @@ if sys.argv[2] == "UM":
     baseDN             = 'DC=unimaas,DC=nl'
     searchScope        = ldap.SCOPE_SUBTREE
     retrieveAttributes = ['objectSid']
-    searchFilter       = "sAMAccountName=%s" % sys.argv[1]
-elif sys.argv[2] == "AZM":
+    searchFilter       = "sAMAccountName=%s" % userName
+# TODO  Fix AZM search when AZM idp is in SRAM
+elif domain == "AZM":
     l = ldap.initialize('ldap://a.corp')
 
     l.protocol_version = ldap.VERSION3
@@ -68,7 +75,7 @@ elif sys.argv[2] == "AZM":
     baseDN             = 'DC=a,DC=corp'
     searchScope        = ldap.SCOPE_SUBTREE
     retrieveAttributes = ['objectSid']
-    searchFilter       = "mailNickName=%s" % sys.argv[1]
+    searchFilter       = "mailNickName=%s" % userEmail
 else:
     sys.stderr.write("name-to-sid.py: ERROR: Organisation was not correctly defined in second argument. Use one of \"UM\" or \"AZM\" \n")
     sys.exit(1)
