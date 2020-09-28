@@ -48,8 +48,8 @@ if len(sys.argv) == 0:
     sys.stderr.write("name-to-sid.py: ERROR: Supply user as first argument \n")
     sys.exit(1)
 
-userEmail = sys.argv[1]
-userSplit = userEmail.split('@')
+voPersonExternalID = sys.argv[1]
+userSplit = voPersonExternalID.split('@')
 userName = userSplit[0]
 domain = userSplit[1]
 
@@ -75,7 +75,7 @@ elif domain == "AZM":
     baseDN             = 'DC=a,DC=corp'
     searchScope        = ldap.SCOPE_SUBTREE
     retrieveAttributes = ['objectSid']
-    searchFilter       = "mailNickName=%s" % userEmail
+    searchFilter       = "mailNickName=%s" % voPersonExternalID
 else:
     sys.stderr.write("name-to-sid.py: ERROR: Organisation was not correctly defined in second argument. Use one of \"UM\" or \"AZM\" \n")
     sys.exit(1)

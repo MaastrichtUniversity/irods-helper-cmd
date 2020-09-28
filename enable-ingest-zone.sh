@@ -4,10 +4,10 @@ set -e
 source /etc/secrets
 
 if [ "${USE_SAMBA}" = "true" ] ; then
-    userEmail=$1
+    voPersonExternalID=$1
 
     # First obtain the sid
-    sid=$($(dirname "$0")/name-to-sid.py $userEmail)
+    sid=$($(dirname "$0")/name-to-sid.py $voPersonExternalID)
     
     if [ -z "$sid" ]; then
         exit 1
