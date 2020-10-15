@@ -65,8 +65,7 @@ if domain == "unimaas.nl":
     searchScope        = ldap.SCOPE_SUBTREE
     retrieveAttributes = ['objectSid']
     searchFilter       = "sAMAccountName=%s" % userName
-# TODO  Fix AZM search when AZM idp is in SRAM
-elif domain == "AZM":
+elif domain == "mumc.nl":
     l = ldap.initialize('ldap://a.corp')
 
     l.protocol_version = ldap.VERSION3
@@ -75,6 +74,7 @@ elif domain == "AZM":
     baseDN             = 'DC=a,DC=corp'
     searchScope        = ldap.SCOPE_SUBTREE
     retrieveAttributes = ['objectSid']
+    # TODO: This searchFilter may need to chance once we have aZM connected to SRAM
     searchFilter       = "mailNickName=%s" % voPersonExternalID
 else:
     sys.stderr.write("name-to-sid.py: ERROR: Organisation was not correctly defined in second argument. Use one of \"UM\" or \"AZM\" \n")
