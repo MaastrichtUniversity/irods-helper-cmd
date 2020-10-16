@@ -77,7 +77,7 @@ elif domain == "mumc.nl":
     # TODO: This searchFilter may need to chance once we have aZM connected to SRAM
     searchFilter       = "mailNickName=%s" % voPersonExternalID
 else:
-    sys.stderr.write("name-to-sid.py: ERROR: Organisation was not correctly defined in second argument. Use one of \"UM\" or \"AZM\" \n")
+    sys.stderr.write("name-to-sid.py: ERROR: Unknown domain "+domain+" from voPersonExternalID. Expected \"unimaas.nl\" or \"mumc.nl\"\n")
     sys.exit(1)
 
 # Perform the LDAP search
