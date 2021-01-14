@@ -64,6 +64,7 @@ if domain == "unimaas.nl":
     baseDN             = 'DC=unimaas,DC=nl'
     searchScope        = ldap.SCOPE_SUBTREE
     retrieveAttributes = ['objectSid']
+    # Search for the username or P-number
     searchFilter       = "sAMAccountName=%s" % userName
 elif domain == "mumc.nl":
     l = ldap.initialize('ldap://a.corp')
@@ -74,8 +75,8 @@ elif domain == "mumc.nl":
     baseDN             = 'DC=a,DC=corp'
     searchScope        = ldap.SCOPE_SUBTREE
     retrieveAttributes = ['objectSid']
-    # TODO: This searchFilter may need to chance once we have aZM connected to SRAM
-    searchFilter       = "mailNickName=%s" % userName
+    # Search for the G-number
+    searchFilter       = "sAMAccountName=%s" % userName
 else:
     sys.stderr.write("name-to-sid.py: ERROR: Unknown domain "+domain+" from voPersonExternalID. Expected \"unimaas.nl\" or \"mumc.nl\"\n")
     sys.exit(1)
