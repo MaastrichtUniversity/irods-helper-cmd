@@ -51,7 +51,7 @@ if len(sys.argv) == 0:
 voPersonExternalID = sys.argv[1]
 userSplit = voPersonExternalID.split('@')
 userName = userSplit[0]
-domain = userSplit[1]
+domain = userSplit[1].lower()
 
 
 # Make distinction between UM- and AZM-LDAP server
