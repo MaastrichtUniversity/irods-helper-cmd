@@ -51,7 +51,7 @@ if len(sys.argv) == 0:
 voPersonExternalID = sys.argv[1]
 userSplit = voPersonExternalID.split('@')
 userName = userSplit[0]
-domain = userSplit[1]
+domain = userSplit[1].lower()
 
 
 # Make distinction between UM- and AZM-LDAP server
@@ -59,7 +59,7 @@ if domain == "unimaas.nl":
     l = ldap.initialize('ldap://ldap.maastrichtuniversity.nl')
 
     l.protocol_version = ldap.VERSION3
-    l.simple_bind_s("CN=Rit-dev (FACBURFHML),OU=Resources,OU=Users,OU=FACBURFHML,OU=FHML,DC=unimaas,DC=nl", readLdapCredentials())
+    l.simple_bind_s("CN=Rit-dev (DATAHUB),OU=Resources,OU=Users,OU=DATAHUB,OU=FHML,DC=unimaas,DC=nl", readLdapCredentials())
 
     baseDN             = 'DC=unimaas,DC=nl'
     searchScope        = ldap.SCOPE_SUBTREE
