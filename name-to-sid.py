@@ -51,6 +51,7 @@ if len(sys.argv) == 0:
 voPersonExternalID = sys.argv[1]
 userSplit = voPersonExternalID.split('@')
 userName = userSplit[0]
+# Change domain to lowercase to make it compatible with domains written in uppercase, lowercase or combinations thereof
 domain = userSplit[1].lower()
 
 
