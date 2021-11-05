@@ -13,18 +13,21 @@ if [ "${USE_SAMBA}" = "true" ] ; then
         exit 1
     fi
     
-    # Creates the token directory + empty metadata.xml file
+    # Creates the token directory + empty schema.json+instance.json files
     mkdir $2
-    touch $2/metadata.xml
+    touch $2/instance.json
+    touch $2/schema.json
     
     # Set all rights except special permissions and full control, also let them inherit
     /usr/bin/setcifsacl -a "ACL:${sid}:ALLOWED/OI|CI/CHANGE" $2
-    /usr/bin/setcifsacl -a "ACL:${sid}:ALLOWED/OI/READ" $2/metadata.xml
+    /usr/bin/setcifsacl -a "ACL:${sid}:ALLOWED/OI/READ" $2/instance.json
+    /usr/bin/setcifsacl -a "ACL:${sid}:ALLOWED/OI/READ" $2/schema.json
     
     exit 0
 else
-    # Creates the token directory + empty metadata.xml file
+    # Creates the token directory + empty schema.json+instance.json files
     mkdir $2
-    touch $2/metadata.xml
+    touch $2/instance.json
+    touch $2/schema.json
     exit 0
 fi
