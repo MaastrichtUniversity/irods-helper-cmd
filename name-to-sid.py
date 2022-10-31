@@ -45,7 +45,7 @@ def read_ldap_credentials():
             if line.startswith('LDAP_PASSWORD='):
                 ldap_password = line[line.index('=') + 1:].strip()
             elif line.startswith('LDAP_USER='):
-                ldap_user = line[line.index('=') + 1:].strip()
+                ldap_user = eval(line[line.index('=') + 1:].strip())
             elif line.startswith('LDAP_URL='):
                 ldap_url = line[line.index('=') + 1:].strip()
             elif line.startswith('LDAP_DOMAIN='):
