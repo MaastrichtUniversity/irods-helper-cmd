@@ -1,45 +1,23 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import ldap
 import struct
-import string
 import sys
 
-def byte_to_str_sid(byte):
-    """
-    Convert bytes into a string SID
-    byte - bytes to convert
-    """
-    ret = 'S'
-    sid = []
-    sid.append(byte_to_long(byte[0]))
-    sid.append(byte_to_long(byte[2:2+6], False))
-    for i in range(8, len(byte), 4):
-        sid.append(byte_to_long(byte[i:i+4]))
-    for i in sid:
-        ret += '-' + str(i)
-    return ret
-
-def byte_to_long(byte, little_endian=True):
-    """
-    Convert bytes into a Python integer
-    byte - bytes to convert
-    little_endian - True (default) or False for little or big endian
-    """
-    if len(byte) > 8:
-        raise Exception('Bytes too long. Needs to be <= 8 or 64bit')
-    else:
-        if little_endian:
-            a = string.ljust(byte, 8, '\x00')
-            return struct.unpack('<q', a)[0]
-        else:
-            a = string.rjust(byte, 8, '\x00')
-            return struct.unpack('>q', a)[0]
+def byte_to_str_sid(binary):
+    version = struct.unpack('B', binary[0:1])[0]
+    assert version == 1, version
+    length = struct.unpack('B', binary[1:2])[0]
+    authority = struct.unpack(b'>Q', b'\x00\x00' + binary[2:8])[0]
+    string = 'S-%d-%d' % (version, authority)
+    binary = binary[8:]
+    assert len(binary) == 4 * length
+    for i in range(length):
+        value = struct.unpack('<L', binary[4*i:4*(i+1)])[0]
+        string += '-%d' % value
+    return string
 
 def read_ldap_credentials():
-    """
-
-    """
     with open("/etc/secrets") as f:
         for line in f:
             if line.startswith('LDAP_PASSWORD='):
@@ -92,4 +70,4 @@ if not result_type == ldap.RES_SEARCH_ENTRY:
 
 rawSid = result[0][1]['objectSid'][0]
 
-print byte_to_str_sid(rawSid)
+print(byte_to_str_sid(rawSid))
